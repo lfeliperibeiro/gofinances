@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Container,
   Header,
@@ -40,14 +40,13 @@ type CategoryData = {
 };
 
 export function Resume() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectDate, setSelectedDate] = useState(new Date());
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>(
     [],
   );
 
   function handleChangeDate(action: 'next' | 'previous') {
-    setIsLoading(true);
     if (action === 'next') {
       setSelectedDate(addMonths(selectDate, 1));
     } else {
@@ -56,6 +55,7 @@ export function Resume() {
   }
 
   async function loadData() {
+    setIsLoading(true);
     const dataKey = '@gofinances:transactions';
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted = response ? JSON.parse(response) : [];
@@ -105,14 +105,10 @@ export function Resume() {
     setIsLoading(false);
   }
 
-  useEffect(() => {
-    loadData().then();
-  }, [selectDate]);
-
   useFocusEffect(
     useCallback(() => {
       loadData().then();
-    }, []),
+    }, [selectDate]),
   );
 
   return (
