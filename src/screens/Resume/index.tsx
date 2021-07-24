@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Container,
   Header,
@@ -20,6 +20,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import theme from '../../global/styles/theme';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { ptBR } from 'date-fns/locale';
+import { useFocusEffect } from '@react-navigation/native';
 
 type TransactionData = {
   type: 'positive' | 'negative';
@@ -54,7 +55,7 @@ export function Resume() {
     }
   }
 
-  async function LoadData() {
+  async function loadData() {
     const dataKey = '@gofinances:transactions';
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted = response ? JSON.parse(response) : [];
@@ -105,8 +106,14 @@ export function Resume() {
   }
 
   useEffect(() => {
-    LoadData().then();
+    loadData().then();
   }, [selectDate]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData().then();
+    }, []),
+  );
 
   return (
     <Container>
