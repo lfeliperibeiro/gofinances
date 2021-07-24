@@ -14,9 +14,11 @@ import { HistoryCard } from '../../components/HistoryCard';
 import { AsyncStorage } from 'react-native';
 import { categories } from '../../utils/categories';
 import { VictoryPie } from 'victory-native';
+import { addMonths, format, subMonths } from 'date-fns';
 import { RFValue } from 'react-native-responsive-fontsize';
 import theme from '../../global/styles/theme';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { ptBR } from 'date-fns/locale';
 
 type TransactionData = {
   type: 'positive' | 'negative';
@@ -36,9 +38,19 @@ type CategoryData = {
 };
 
 export function Resume() {
+  const [selectDate, setSelectedDate] = useState(new Date());
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>(
     [],
   );
+
+  function handleChangeDate(action: 'next' | 'previous') {
+    if (action === 'next') {
+      setSelectedDate(addMonths(selectDate, 1));
+    } else {
+      setSelectedDate(subMonths(selectDate, 1));
+    }
+  }
+
   async function LoadData() {
     const dataKey = '@gofinances:transactions';
     const response = await AsyncStorage.getItem(dataKey);
@@ -100,11 +112,11 @@ export function Resume() {
         }}
       >
         <MonthSelect>
-          <MonthSelectButton>
+          <MonthSelectButton onPress={() => handleChangeDate('previous')}>
             <MonthSelectIcon name={'chevron-left'} />
           </MonthSelectButton>
-          <Month>Maio</Month>
-          <MonthSelectButton>
+          <Month>{format(selectDate, 'MMMM, yyyy', { locale: ptBR })}</Month>
+          <MonthSelectButton onPress={() => handleChangeDate('next')}>
             <MonthSelectIcon name={'chevron-right'} />
           </MonthSelectButton>
         </MonthSelect>
