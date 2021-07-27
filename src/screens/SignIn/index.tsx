@@ -6,11 +6,13 @@ import {
   Title,
   SignInTitle,
   Footer,
+  FooterWrapper,
 } from './styles';
 import AppleIcon from '../../assets/apple.svg';
 import GoogleIcon from '../../assets/google.svg';
 import Logo from '../../assets/logo.svg';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { SignInSocialButton } from '../../components/SignInSocialButton';
 
 export function SignIn() {
   return (
@@ -26,7 +28,12 @@ export function SignIn() {
           Faça o seu login com {'\n'}uma das contas abaixo
         </SignInTitle>
       </Header>
-      <Footer></Footer>
+      <Footer>
+        <FooterWrapper>
+          <SignInSocialButton title={'Entrar com o Google'} svg={GoogleIcon} />
+          <SignInSocialButton title={'Entrar com Apple'} svg={AppleIcon} />
+        </FooterWrapper>
+      </Footer>
     </Container>
   );
 }
