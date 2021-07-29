@@ -21,6 +21,7 @@ import { TransactionCard, Data } from '../../components/TransactionCard';
 import { ActivityIndicator, AsyncStorage } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
+import { useAuth } from '../../hooks/auth';
 
 export interface DataListProps extends Data {
   id: string;
@@ -45,6 +46,7 @@ export function Dashboard() {
   );
 
   const theme = useTheme();
+  const { signOut, user } = useAuth();
 
   function getLatTransactionDate(
     collection: DataListProps[],
@@ -140,12 +142,12 @@ export function Dashboard() {
   }
 
   useEffect(() => {
-    loadingTransaction();
+    loadingTransaction().then();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      loadingTransaction();
+      loadingTransaction().then();
     }, []),
   );
   return (
@@ -161,15 +163,15 @@ export function Dashboard() {
               <UserInfo>
                 <Photo
                   source={{
-                    uri: 'https://avatars.githubusercontent.com/u/53883371?v=4',
+                    uri: user.photo,
                   }}
                 />
                 <User>
                   <UserGreeting>Olá,</UserGreeting>
-                  <UserName>Felipe</UserName>
+                  <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
-              <LogoutButton onPress={() => {}}>
+              <LogoutButton onPress={signOut}>
                 <Icon name={'power'} />
               </LogoutButton>
             </UserWrapper>
