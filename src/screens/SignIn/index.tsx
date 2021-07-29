@@ -14,7 +14,7 @@ import Logo from '../../assets/logo.svg';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { SignInSocialButton } from '../../components/SignInSocialButton';
 import { useAuth } from '../../hooks/auth';
-import { ActivityIndicator, Alert } from 'react-native';
+import { ActivityIndicator, Alert, Platform } from 'react-native';
 import theme from '../../global/styles/theme';
 
 export function SignIn() {
@@ -63,11 +63,13 @@ export function SignIn() {
             svg={GoogleIcon}
             onPress={handleSignInGoogle}
           />
-          <SignInSocialButton
-            title={'Entrar com Apple'}
-            svg={AppleIcon}
-            onPress={handleSignInApple}
-          />
+          {Platform.OS === 'ios' && (
+            <SignInSocialButton
+              title={'Entrar com Apple'}
+              svg={AppleIcon}
+              onPress={handleSignInApple}
+            />
+          )}
         </FooterWrapper>
         {isLoading && (
           <ActivityIndicator
