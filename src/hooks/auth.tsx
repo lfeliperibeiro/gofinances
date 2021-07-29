@@ -55,11 +55,11 @@ function AuthProvider({ children }: AuthProviderProps) {
         const response = await fetch(
           `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`,
         );
-        const userInfo = await response.json();
+        const userInfo = (await response.json()) as User;
         setUser({
           id: userInfo.id,
           email: userInfo.email,
-          name: userInfo.given_name,
+          name: userInfo?.name,
           photo: userInfo.photo,
         });
         await AsyncStorage.setItem(
